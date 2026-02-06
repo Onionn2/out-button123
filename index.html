@@ -2,163 +2,210 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>笑ってはいけない アウトボタン（完全版）</title>
+<title>ガキ使 ポン出し</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body {
   margin: 0;
-  height: 100vh;
-  background: #ffffff;
-  font-family: Arial, sans-serif;
+  background: #fff;
+  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+}
+
+/* ===== タブ ===== */
+.tabs {
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
 }
 
-#message {
-  font-size: 3.5rem;
-  font-weight: bold;
-  color: #000;
+.tab {
+  flex: 1;
+  padding: 14px;
+  font-size: 1.2rem;
+  border: none;
+  background: #eee;
 }
 
-.buttons {
-  width: 94vw;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-.outButton {
-  height: 20vh;
-  font-size: 3rem;
+.tab.active {
   background: red;
   color: white;
-  border: none;
-  border-radius: 18px;
 }
 
-.allOut {
-  grid-column: span 2;
-  background: darkred;
-  height: 18vh;
-}
-
-.gaugeContainer {
-  width: 85vw;
-  height: 26px;
-  background: #ddd;
-  border-radius: 13px;
-  overflow: hidden;
-}
-
-.gauge {
-  width: 100%;
-  height: 100%;
-  background: red;
-}
-
-#gaugeText {
-  font-size: 1.5rem;
+/* ===== タイトル ===== */
+.title {
+  text-align: center;
+  font-size: 2.4rem;
   font-weight: bold;
-  color: #000;
+  margin: 24px 0;
 }
+
+/* ===== 音量 ===== */
+.volume {
+  padding: 0 20px 20px;
+}
+
+.volume input {
+  width: 100%;
+}
+
+/* ===== 画面 ===== */
+.screen {
+  display: none;
+  padding: 0 20px 30px;
+}
+
+.screen.active {
+  display: block;
+}
+
+/* ===== ボタン共通 ===== */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.btn {
+  height: 16vh;
+  font-size: 2.2rem;
+  border: none;
+  border-radius: 24px;
+  color: white;
+}
+
+.red { background: red; }
+.darkred {
+  background: #8b0000;
+  grid-column: span 2;
+}
+.gray { background: #666; }
 </style>
 </head>
 
 <body>
 
-<div id="message">アウト！</div>
-
-<div class="buttons">
-  <button class="outButton" data-name="けいと" data-sound="keito">けいと</button>
-  <button class="outButton" data-name="そら" data-sound="sora">そら</button>
-  <button class="outButton" data-name="和田" data-sound="wada">和田</button>
-  <button class="outButton" data-name="櫻井" data-sound="sakurai">櫻井</button>
-  <button class="outButton allOut" data-name="全員" data-sound="all">
-    全員アウト
-  </button>
+<!-- ===== タブ ===== -->
+<div class="tabs">
+  <button class="tab active" data-target="bgm">BGM</button>
+  <button class="tab" data-target="out">ガキの使い</button>
+  <button class="tab" data-target="se">効果音</button>
 </div>
 
-<div id="gaugeText"></div>
-<div class="gaugeContainer">
-  <div class="gauge" id="gauge"></div>
+<!-- ===== 音量 ===== -->
+<div class="volume">
+  <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8">
+</div>
+
+<!-- ===== BGM ===== -->
+<div class="screen active" id="bgm">
+  <div class="title">BGM</div>
+  <div class="grid">
+    <button class="btn red" data-key="bgm">再生</button>
+    <button class="btn gray" id="bgmStop">停止</button>
+  </div>
+</div>
+
+<!-- ===== ガキ使 ===== -->
+<div class="screen" id="out">
+  <div class="title">アウト！</div>
+  <div class="grid">
+    <button class="btn red" data-key="keito">けいと</button>
+    <button class="btn red" data-key="sora">そら</button>
+    <button class="btn red" data-key="wada">和田</button>
+    <button class="btn red" data-key="sakurai">櫻井</button>
+    <button class="btn darkred" data-key="all">全員アウト</button>
+  </div>
+</div>
+
+<!-- ===== 効果音 ===== -->
+<div class="screen" id="se">
+  <div class="title">効果音</div>
+  <div class="grid">
+    <button class="btn red" data-key="pon">学校のチャイム</button>
+    <button class="btn red" data-key="don">茶番終了</button>
+    <button class="btn red" data-key="news">ニュースBGM</button>
+    <button class="btn gray" id="stopAll">全停止</button>
+  </div>
 </div>
 
 <script>
-/* ===== iOS Safari 音声アンロック ===== */
-let audioUnlocked = false;
-let audioContext = null;
-
+/* ===== iOS音声アンロック ===== */
+let unlocked = false;
 function unlockAudio() {
-  if (audioUnlocked) return;
-  audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  audioContext.resume();
-  audioUnlocked = true;
+  if (unlocked) return;
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  ctx.resume();
+  unlocked = true;
 }
 
-/* ===== 音声事前ロード ===== */
-const soundSources = {
+/* ===== 音量 ===== */
+let masterVolume = 0.8;
+document.getElementById("volume").oninput = e => {
+  masterVolume = e.target.value;
+  Object.values(sounds).forEach(a => a.volume = masterVolume);
+};
+
+/* ===== 音源 ===== */
+const sounds = {
+  bgm: new Audio("bgm.mp3"),
+
   keito: new Audio("keito.mp3"),
   sora: new Audio("sora.mp3"),
   wada: new Audio("wada.mp3"),
   sakurai: new Audio("sakurai.mp3"),
-  all: new Audio("all.mp3")
+  all: new Audio("all.mp3"),
+
+  pon: new Audio("school_song.mp3"),
+  don: new Audio("chan.mp3"),
+  news: new Audio("news.mp3")
 };
 
-for (const k in soundSources) {
-  soundSources[k].preload = "auto";
+sounds.bgm.loop = true;
+
+/* ===== preload ===== */
+Object.values(sounds).forEach(a => {
+  a.preload = "auto";
+  a.volume = masterVolume;
+});
+
+/* ===== 再生（連打OK・重ならない） ===== */
+function play(key) {
+  unlockAudio();
+  const a = sounds[key];
+  a.pause();
+  a.currentTime = 0;
+  a.volume = masterVolume;
+  a.play().catch(()=>{});
 }
 
-/* ===== UI ===== */
-const buttons = document.querySelectorAll('.outButton');
-const message = document.getElementById('message');
-const gauge = document.getElementById('gauge');
-const gaugeText = document.getElementById('gaugeText');
+/* ===== 全停止 ===== */
+function stopAll() {
+  Object.values(sounds).forEach(a => {
+    a.pause();
+    a.currentTime = 0;
+  });
+}
 
-const DURATION = 4;
-let startTime = 0;
-let timer = null;
-
-buttons.forEach(btn => {
-  btn.onclick = () => {
-    unlockAudio(); // ★最重要（最初の1回）
-
-    const name = btn.dataset.name;
-    const key = btn.dataset.sound;
-
-    message.textContent = name + " OUT！";
-
-    /* ===== 確実再生（cloneNode方式） ===== */
-    const audio = soundSources[key].cloneNode(true);
-    audio.currentTime = 0;
-    audio.play().catch(() => {});
-
-    /* ===== タイマーリセット ===== */
-    startTime = Date.now();
-    gauge.style.width = "100%";
-
-    if (!timer) {
-      timer = setInterval(update, 60); // 軽量更新
-    }
+/* ===== タブ切替 ===== */
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById(tab.dataset.target).classList.add("active");
   };
 });
 
-function update() {
-  const elapsed = (Date.now() - startTime) / 1000;
-  const remain = DURATION - elapsed;
+/* ===== ボタン処理 ===== */
+document.querySelectorAll("[data-key]").forEach(btn => {
+  btn.onclick = () => play(btn.dataset.key);
+});
 
-  if (remain <= 0) {
-    gauge.style.width = "0%";
-    gaugeText.textContent = "";
-    clearInterval(timer);
-    timer = null;
-    return;
-  }
+document.getElementById("bgmStop").onclick = () => {
+  sounds.bgm.pause();
+  sounds.bgm.currentTime = 0;
+};
 
-  gauge.style.width = (remain / DURATION * 100) + "%";
-  gaugeText.textContent = remain.toFixed(1) + "s";
-}
+document.getElementById("stopAll").onclick = stopAll;
 </script>
 
 </body>
