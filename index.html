@@ -12,114 +12,90 @@ body {
   font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
 }
 
-/* ===== 利用規約 ===== */
-#termsOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
+/* ===== タブ ===== */
+.tabs {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
 }
-#termsBox {
-  background: #fff;
-  width: 90%;
-  max-width: 520px;
-  border-radius: 20px;
-  padding: 24px;
-  text-align: center;
-}
-.warning {
-  color: red;
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin: 16px 0;
-}
-#agreeInput {
-  width: 100%;
-  font-size: 1.1rem;
-  padding: 10px;
-}
-#agreeBtn {
-  width: 100%;
+
+.tab {
+  flex: 1;
   padding: 14px;
   font-size: 1.2rem;
   border: none;
-  border-radius: 12px;
-  background: #aaa;
+  background: #eee;
+}
+
+.tab.active {
+  background: red;
   color: white;
 }
-#agreeBtn.enabled { background: red; }
-#timer { color:red;font-size:1.3rem;margin-top:10px }
 
-/* ===== UI ===== */
-.tabs { display:flex }
-.tab {
-  flex:1;padding:14px;font-size:1.2rem;
-  border:none;background:#eee;
-}
-.tab.active { background:red;color:white }
-
+/* ===== タイトル ===== */
 .title {
-  text-align:center;font-size:2.4rem;
-  font-weight:bold;margin:24px 0;
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin: 24px 0;
 }
-.screen { display:none;padding:0 20px 30px }
-.screen.active { display:block }
 
+/* ===== 音量 ===== */
+.volume {
+  padding: 0 20px 20px;
+}
+
+.volume input {
+  width: 100%;
+}
+
+/* ===== 画面 ===== */
+.screen {
+  display: none;
+  padding: 0 20px 30px;
+}
+
+.screen.active {
+  display: block;
+}
+
+/* ===== ボタン ===== */
 .grid {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
 }
+
 .btn {
-  height:16vh;font-size:2.2rem;
-  border:none;border-radius:24px;color:white;
+  height: 16vh;
+  font-size: 2.2rem;
+  border: none;
+  border-radius: 24px;
+  color: white;
 }
-.red{background:red}
-.blue{background:#1e90ff}
-.green{background:#2e8b57}
-.gray{background:#666}
-.darkred{background:#8b0000;grid-column:span 2}
+
+/* 色 */
+.red { background: red; }
+.blue { background: #1e90ff; }
+.green { background: #2e8b57; }
+.gray { background: #666; }
+.darkred {
+  background: #8b0000;
+  grid-column: span 2;
+}
 </style>
 </head>
 
 <body>
-
-<!-- ===== 利用規約 ===== -->
-<div id="termsOverlay">
-  <div id="termsBox">
-    <h2>利用規約</h2>
-    <p>音量・周囲の安全に注意してください。</p>
-
-    <p>
-     音量を最大にしてください。最大にしました。
-     確認しました。
-      トラブルについては運営者は一切責任を負いません。  
-      常識と空気を読み、自己責任で利用してください。
-    </p>
-
-    <div class="warning">⚠ 制限時間60秒・ローマ字入力 ⚠</div>
-
-    <p id="agreeText">
-      次の文章を<strong>ローマ字で</strong>入力してください。<br><br>
-      「本利用規約は、音声ポン出しの利用条件を定めるものです。本サービスを利用した時点で、本規約に同意したものとみなします」
-    </p>
-
-    <input id="agreeInput" type="text" placeholder="ローマ字で入力">
-
-    <div id="timer">残り 60 秒</div>
-
-    <button id="agreeBtn" disabled>同意して使用する</button>
-  </div>
-</div>
 
 <!-- ===== タブ ===== -->
 <div class="tabs">
   <button class="tab active" data-target="bgm">BGM</button>
   <button class="tab" data-target="out">ガキの使い</button>
   <button class="tab" data-target="se">効果音</button>
+</div>
+
+<!-- ===== 音量 ===== -->
+<div class="volume">
+  <input id="volume" type="range" min="0" max="1" step="0.01" value="2">
 </div>
 
 <!-- ===== BGM ===== -->
@@ -131,23 +107,28 @@ body {
   </div>
 </div>
 
-<!-- ===== アウト ===== -->
+<!-- ===== ガキ使（アウト）===== -->
 <div class="screen" id="out">
   <div class="title">アウト！</div>
   <div class="grid">
+
+    <!-- 元メンバー（赤） -->
     <button class="btn red" data-key="keito">けいと</button>
     <button class="btn red" data-key="sora">そら</button>
     <button class="btn red" data-key="wada">和田</button>
     <button class="btn red" data-key="sakurai">櫻井</button>
 
+    <!-- 追加メンバー（青） -->
     <button class="btn blue" data-key="tanaka">デデーン</button>
     <button class="btn blue" data-key="matsumoto">けいとだけ</button>
     <button class="btn blue" data-key="hamada">櫻井だけ</button>
     <button class="btn blue" data-key="yamazaki">そらだけ</button>
     <button class="btn blue" data-key="endo">和田だけ</button>
 
+    <!-- 特別枠（緑） -->
     <button class="btn green" data-key="special">アウトだけ</button>
     <button class="btn darkred" data-key="all">全員アウト</button>
+
   </div>
 </div>
 
@@ -157,98 +138,97 @@ body {
   <div class="grid">
     <button class="btn red" data-key="pon">学校のチャイム</button>
     <button class="btn red" data-key="don">茶番終了</button>
-    <button class="btn red" data-key="news">絶対に押すな!!!</button>
+    <button class="btn red" data-key="news">ニュースbgm</button>
     <button class="btn gray" id="stopAll">全停止</button>
   </div>
 </div>
 
 <script>
-/* ===== 正解ローマ字 ===== */
-const AGREE_ROMAJI = "onryou";
+/* ===== iOS 音声アンロック ===== */
+let unlocked = false;
 
-/* ===== タイマー ===== */
-let time = 60;
-const timerText = document.getElementById("timer");
-const timer = setInterval(()=>{
-  time--;
-  timerText.textContent = `残り ${time} 秒`;
-  if(time<=0){
-    alert("時間切れ！");
-    location.reload();
-  }
-},1000);
+function unlockAudio() {
+  if (unlocked) return;
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  ctx.resume();
+  unlocked = true;
+}
 
-/* ===== 入力判定（入力した瞬間に規約文を隠す） ===== */
-const agreeInput = document.getElementById("agreeInput");
-const agreeBtn = document.getElementById("agreeBtn");
-const agreeText = document.getElementById("agreeText");
+/* ===== 音量 ===== */
+let masterVolume = 1;
 
-agreeInput.addEventListener("input",()=>{
-  agreeText.style.display = "none";
+document.getElementById("volume").oninput = e => {
+  masterVolume = e.target.value;
+  Object.values(sounds).forEach(a => a.volume = masterVolume);
+};
 
-  const v = agreeInput.value.toLowerCase().replace(/\s+/g,"");
-  if(v === AGREE_ROMAJI){
-    clearInterval(timer);
-    agreeBtn.disabled = false;
-    agreeBtn.classList.add("enabled");
-  }
+/* ===== 音源 ===== */
+const sounds = {
+  bgm: new Audio("bgm.mp3"),
+  keito: new Audio("keito.mp3"),
+  sora: new Audio("sora.mp3"),
+  wada: new Audio("wada.mp3"),
+  sakurai: new Audio("sakurai.mp3"),
+  tanaka: new Audio("deden.mp3"),
+  matsumoto: new Audio("keito_only.mp3"),
+  hamada: new Audio("sakurai_only.mp3"),
+  yamazaki: new Audio("sora_only.mp3"),
+  endo: new Audio("wada_only.mp3"),
+  special: new Audio("out_only.mp3"),
+  all: new Audio("all.mp3"),
+  pon: new Audio("school_song.mp3"),
+  don: new Audio("chan.mp3"),
+  news: new Audio("news.mp3")
+};
+
+sounds.bgm.loop = true;
+
+/* ===== preload ===== */
+Object.values(sounds).forEach(a => {
+  a.preload = "auto";
+  a.volume = masterVolume;
 });
 
-agreeBtn.onclick=()=>{
-  document.getElementById("termsOverlay").style.display="none";
-};
-
-/* ===== 音声 ===== */
-let unlocked=false;
-function unlock(){
-  if(unlocked)return;
-  const ctx=new(window.AudioContext||window.webkitAudioContext)();
-  ctx.resume();unlocked=true;
+/* ===== 再生 ===== */
+function play(key) {
+  unlockAudio();
+  const a = sounds[key];
+  a.pause();
+  a.currentTime = 0;
+  a.volume = masterVolume;
+  a.play().catch(()=>{});
 }
 
-const NORMAL=0.85, MAX=1;
-const sounds={
-  bgm:new Audio("bgm.mp3"),
-  keito:new Audio("keito.mp3"),
-  sora:new Audio("sora.mp3"),
-  wada:new Audio("wada.mp3"),
-  sakurai:new Audio("sakurai.mp3"),
-  tanaka:new Audio("deden.mp3"),
-  matsumoto:new Audio("keito_only.mp3"),
-  hamada:new Audio("sakurai_only.mp3"),
-  yamazaki:new Audio("sora_only.mp3"),
-  endo:new Audio("wada_only.mp3"),
-  special:new Audio("out_only.mp3"),
-  all:new Audio("all.mp3"),
-  pon:new Audio("school_song.mp3"),
-  don:new Audio("chan.mp3"),
-  news:new Audio("sinesine.mp3")
-};
-sounds.bgm.loop=true;
-
-function play(k){
-  unlock();
-  Object.values(sounds).forEach(a=>a.volume=k==="news"?MAX:NORMAL);
-  const a=sounds[k];
-  a.pause();a.currentTime=0;a.play();
-}
-function stopAll(){
-  Object.values(sounds).forEach(a=>{a.pause();a.currentTime=0});
+/* ===== 全停止 ===== */
+function stopAll() {
+  Object.values(sounds).forEach(a => {
+    a.pause();
+    a.currentTime = 0;
+  });
 }
 
-/* ===== UI ===== */
-document.querySelectorAll(".tab").forEach(t=>{
-  t.onclick=()=>{
-    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-    document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
-    t.classList.add("active");
-    document.getElementById(t.dataset.target).classList.add("active");
+/* ===== タブ切替 ===== */
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById(tab.dataset.target).classList.add("active");
   };
 });
-document.querySelectorAll("[data-key]").forEach(b=>b.onclick=()=>play(b.dataset.key));
-bgmStop.onclick=()=>{sounds.bgm.pause();sounds.bgm.currentTime=0};
-stopAll.onclick=stopAll;
-</script>
 
+/* ===== ボタン処理 ===== */
+document.querySelectorAll("[data-key]").forEach(btn => {
+  btn.onclick = () => play(btn.dataset.key);
+});
+
+document.getElementById("bgmStop").onclick = () => {
+  sounds.bgm.pause();
+  sounds.bgm.currentTime = 0;
+};
+
+document.getElementById("stopAll").onclick = stopAll;
+
+</script>
 </body>
 </html>
