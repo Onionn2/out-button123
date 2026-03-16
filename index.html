@@ -2,233 +2,246 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>ガキ使 ポン出し（完全版）</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REDSTARS Official Goods</title>
 
 <style>
-body {
-  margin: 0;
-  background: #fff;
-  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:#f5f5f5;
+color:#222;
+text-align:center;
 }
 
-/* ===== タブ ===== */
-.tabs {
-  display: flex;
+/* ===== オープニング ===== */
+
+#loader{
+position:fixed;
+width:100%;
+height:100%;
+background:black;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+overflow:hidden;
+z-index:1000;
 }
 
-.tab {
-  flex: 1;
-  padding: 14px;
-  font-size: 1.2rem;
-  border: none;
-  background: #eee;
+/* 赤い光 */
+
+#loader::before{
+content:"";
+position:absolute;
+width:700px;
+height:700px;
+background:radial-gradient(circle, rgba(255,0,0,0.5), transparent 70%);
+animation:pulse 2s infinite;
 }
 
-.tab.active {
-  background: rgb(13, 126, 255);
-  color: white;
+@keyframes pulse{
+0%{transform:scale(0.8);opacity:0.7;}
+100%{transform:scale(1.4);opacity:0;}
 }
 
-/* ===== タイトル ===== */
-.title {
-  text-align: center;
-  font-size: 2.4rem;
-  font-weight: bold;
-  margin: 24px 0;
+/* ロゴ */
+
+.logo{
+width:260px;
+z-index:2;
+filter:drop-shadow(0 0 25px red);
+animation:logoIntro 2.5s ease-out;
 }
 
-/* ===== 音量 ===== */
-.volume {
-  padding: 0 20px 20px;
+@keyframes logoIntro{
+
+0%{
+transform:scale(0.2) rotate(-20deg);
+opacity:0;
 }
 
-.volume input {
-  width: 100%;
+60%{
+transform:scale(1.2) rotate(5deg);
 }
 
-/* ===== 画面 ===== */
-.screen {
-  display: none;
-  padding: 0 20px 30px;
+100%{
+transform:scale(1) rotate(0);
+opacity:1;
 }
 
-.screen.active {
-  display: block;
 }
 
-/* ===== ボタン ===== */
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
+/* REDSTARS文字 */
+
+.title{
+margin-top:20px;
+font-size:45px;
+letter-spacing:8px;
+color:red;
+text-shadow:0 0 20px red;
+animation:fadeIn 2s;
+z-index:2;
 }
 
-.btn {
-  height: 16vh;
-  font-size: 2.2rem;
-  border: none;
-  border-radius: 24px;
-  color: white;
+@keyframes fadeIn{
+0%{opacity:0;}
+100%{opacity:1;}
 }
 
-/* 色 */
-.red { background: red; }
-.blue { background: #1e90ff; }
-.green { background: #2e8b57; }
-.gray { background: #666; }
-.darkred {
-  background: #8b0000;
-  grid-column: span 2;
+/* 流れ星 */
+
+.star{
+position:absolute;
+width:3px;
+height:120px;
+background:linear-gradient(red, transparent);
+opacity:0.7;
+animation:shoot 2s linear infinite;
 }
+
+.star:nth-child(1){left:10%; animation-delay:0s}
+.star:nth-child(2){left:30%; animation-delay:0.5s}
+.star:nth-child(3){left:50%; animation-delay:1s}
+.star:nth-child(4){left:70%; animation-delay:1.5s}
+.star:nth-child(5){left:90%; animation-delay:2s}
+
+@keyframes shoot{
+
+0%{
+transform:translateY(-120vh) translateX(-50px);
+opacity:1;
+}
+
+100%{
+transform:translateY(120vh) translateX(50px);
+opacity:0;
+}
+
+}
+
+/* ===== メインサイト ===== */
+
+#content{
+display:none;
+padding:40px;
+}
+
+header img{
+width:120px;
+}
+
+.shop{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:30px;
+margin-top:40px;
+}
+
+.item{
+background:white;
+border-radius:12px;
+box-shadow:0 6px 15px rgba(0,0,0,0.15);
+padding:20px;
+width:220px;
+transition:transform 0.3s;
+}
+
+.item:hover{
+transform:translateY(-6px);
+}
+
+.item img{
+width:100%;
+border-radius:8px;
+}
+
+button{
+margin-top:10px;
+background:#e53935;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:6px;
+cursor:pointer;
+font-size:14px;
+}
+
+button:hover{
+background:#c62828;
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- ===== タブ ===== -->
-<div class="tabs">
-  <button class="tab active" data-target="bgm">BGM</button>
-  <button class="tab" data-target="out">ガキの使い</button>
-  <button class="tab" data-target="se">効果音</button>
+<!-- オープニング -->
+
+<div id="loader">
+
+<div class="star"></div>
+<div class="star"></div>
+<div class="star"></div>
+<div class="star"></div>
+<div class="star"></div>
+
+<img src="logo.JPG" class="logo">
+<div class="title">REDSTARS</div>
+
 </div>
 
-<!-- ===== 音量 ===== -->
-<div class="volume">
-  <input id="volume" type="range" min="0" max="1" step="0.01" value="2">
+<!-- メイン -->
+
+<div id="content">
+
+<header>
+<img src="logo.JPG">
+<h1>REDSTARS OFFICIAL GOODS</h1>
+</header>
+
+<div class="shop">
+
+<div class="item">
+<img src="shirt.png">
+<h2>Tシャツ</h2>
+<p>¥6000</p>
+<button>購入</button>
 </div>
 
-<!-- ===== BGM ===== -->
-<div class="screen active" id="bgm">
-  <div class="title">BGM</div>
-  <div class="grid">
-    <button class="btn red" data-key="bgm">再生</button>
-    <button class="btn gray" id="bgmStop">停止</button>
-  </div>
+<div class="item">
+<img src="towel.png">
+<h2>タオル</h2>
+<p>¥1500</p>
+<button>購入</button>
 </div>
 
-<!-- ===== ガキ使（アウト）===== -->
-<div class="screen" id="out">
-  <div class="title">アウト！</div>
-  <div class="grid">
-
-    <!-- 元メンバー（赤） -->
-    <button class="btn red" data-key="keito">けいと</button>
-    <button class="btn red" data-key="sora">そら</button>
-    <button class="btn red" data-key="wada">和田</button>
-    <button class="btn red" data-key="sakurai">櫻井</button>
-
-    <!-- 追加メンバー（青） -->
-    <button class="btn blue" data-key="tanaka">デデーン</button>
-    <button class="btn blue" data-key="matsumoto">③けいとだけ</button>
-    <button class="btn blue" data-key="hamada">④櫻井だけ</button>
-    <button class="btn blue" data-key="yamazaki">①そらだけ</button>
-    <button class="btn blue" data-key="endo">②和田だけ</button>
-
-    <!-- 特別枠（緑） -->
-    <button class="btn green" data-key="special">アウトだけ</button>
-    <button class="btn darkred" data-key="all">全員アウト</button>
-
-  </div>
+<div class="item">
+<img src="sticker.png">
+<h2>ステッカー5枚入り</h2>
+<p>¥1500</p>
+<button>購入</button>
 </div>
 
-<!-- ===== 効果音 ===== -->
-<div class="screen" id="se">
-  <div class="title">効果音</div>
-  <div class="grid">
-    <button class="btn red" data-key="pon">学校のチャイム</button>
-    <button class="btn red" data-key="don">茶番終了</button>
-    <button class="btn red" data-key="news">意味無い</button>
-    <button class="btn gray" id="stopAll">全停止</button>
-  </div>
+</div>
+
 </div>
 
 <script>
-/* ===== iOS 音声アンロック ===== */
-let unlocked = false;
 
-function unlockAudio() {
-  if (unlocked) return;
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
-  ctx.resume();
-  unlocked = true;
+window.onload = function(){
+
+setTimeout(function(){
+
+document.getElementById("loader").style.display="none";
+document.getElementById("content").style.display="block";
+
+},4000);
+
 }
-
-/* ===== 音量 ===== */
-let masterVolume = 1;
-
-document.getElementById("volume").oninput = e => {
-  masterVolume = e.target.value;
-  Object.values(sounds).forEach(a => a.volume = masterVolume);
-};
-
-/* ===== 音源 ===== */
-const sounds = {
-  bgm: new Audio("bgm.mp3"),
-  keito: new Audio("keito.mp3"),
-  sora: new Audio("sora.mp3"),
-  wada: new Audio("wada.mp3"),
-  sakurai: new Audio("sakurai.mp3"),
-  tanaka: new Audio("deden.mp3"),
-  matsumoto: new Audio("keito_only.mp3"),
-  hamada: new Audio("sakurai_only.mp3"),
-  yamazaki: new Audio("sora_only.mp3"),
-  endo: new Audio("wada_only.mp3"),
-  special: new Audio("out_only.mp3"),
-  all: new Audio("all.mp3"),
-  pon: new Audio("school_song.mp3"),
-  don: new Audio("chan.mp3"),
-  news: new Audio("")
-};
-
-sounds.bgm.loop = true;
-
-/* ===== preload ===== */
-Object.values(sounds).forEach(a => {
-  a.preload = "auto";
-  a.volume = masterVolume;
-});
-
-/* ===== 再生 ===== */
-function play(key) {
-  unlockAudio();
-  const a = sounds[key];
-  a.pause();
-  a.currentTime = 0;
-  a.volume = masterVolume;
-  a.play().catch(()=>{});
-}
-
-/* ===== 全停止 ===== */
-function stopAll() {
-  Object.values(sounds).forEach(a => {
-    a.pause();
-    a.currentTime = 0;
-  });
-}
-
-/* ===== タブ切替 ===== */
-document.querySelectorAll(".tab").forEach(tab => {
-  tab.onclick = () => {
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    tab.classList.add("active");
-    document.getElementById(tab.dataset.target).classList.add("active");
-  };
-});
-
-/* ===== ボタン処理 ===== */
-document.querySelectorAll("[data-key]").forEach(btn => {
-  btn.onclick = () => play(btn.dataset.key);
-});
-
-document.getElementById("bgmStop").onclick = () => {
-  sounds.bgm.pause();
-  sounds.bgm.currentTime = 0;
-};
-
-document.getElementById("stopAll").onclick = stopAll;
 
 </script>
+
 </body>
 </html>
